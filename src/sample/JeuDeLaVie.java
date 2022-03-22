@@ -1,10 +1,13 @@
 package sample;
 
 import java.util.Arrays;
+import java.util.Random ;
 
 public class    JeuDeLaVie {
 
     private int[][] tableau;
+
+    Random r = new Random();
 
     public JeuDeLaVie(int[][] tab) {
         this.tableau = tab;
@@ -25,6 +28,19 @@ public class    JeuDeLaVie {
     public int valeurCase(int i, int j) {
         /** renvoie la valeur de la case [i][j] ou 0 si la case n'existe pas */
         return this.tableau[i][j];
+    }
+
+    public void creationTableau(int cell_vivantes){
+        /** méthode qui permet de mettre des cellules vivantes dans la matrice
+         * cell_vivantes : nombre de cellules vivantes qu'on veut
+         */
+        int ligne;
+        int colonne;
+        for (int c = 1 ; c < cell_vivantes +1 ; c++) {
+            ligne = r.nextInt(10);
+            colonne = r.nextInt(10);
+            this.tableau[ligne][colonne] = 1;
+        }
     }
 
     public int totalVoisins(int i, int j) {
@@ -60,6 +76,7 @@ public class    JeuDeLaVie {
          * Fait tourner le jeu pendant nombre_tours. Elle rafraîchit l'affichage à chaque tour
          * et attend delai (en secondes) entre chaque tour
          */
+        affiche(); // affiche le tableau initialisé
         for(int tour=0; tour <= nombre_tours; tour++){
             tour();
             affiche();
@@ -70,6 +87,8 @@ public class    JeuDeLaVie {
         for (int j = 0; j < this.tableau.length; j++) {
             System.out.println(Arrays.toString(this.tableau[j]));
         }
+        System.out.println("\n");
+        System.out.println("\n");
     }
 
     public void tour() {

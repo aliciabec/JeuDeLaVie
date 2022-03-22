@@ -1,6 +1,6 @@
 package sample;
 
-public class JeuDeLaVie {
+public class    JeuDeLaVie {
 
     private int[][] tableau;
 
@@ -47,6 +47,13 @@ public class JeuDeLaVie {
             resultat = 0;
         }
         return resultat;
+    }
+    public void run (int nombre_tour, int délai ) {
+        nombre_tour=0;
+        for(int i=0; i <= nombre_tour; i++){
+            System.out.println(tour());
+
+        }
     }
 
     public void tour() {

@@ -60,5 +60,4 @@ public class JeuDeLaVie {
         this.tableau = t;
 
     }
-
 }

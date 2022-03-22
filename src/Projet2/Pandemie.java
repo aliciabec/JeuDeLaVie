@@ -27,7 +27,7 @@ public class Pandemie {
         for (int k = i-1; k < i+2; k++) {
             for (int l = j-1; l <j+2 ; l++) {
                 if (k != i || l !=j){
-                    somme = somme + this.tab_ind.get(k).get(l).;
+                    somme = somme + this.tab_ind.get(k).get(l);
                 }
             }
 

@@ -1,6 +1,5 @@
 package sample;
 
-
 import java.util.Arrays;
 
 public class Main {
@@ -41,6 +40,7 @@ public class Main {
             System.out.println(Arrays.toString(tab.getTableau()[j]));
         }
 
+        tab.run(4,0);
         //System.out.println(tab.resultats(tab.valeurCase(2,2), tab.totalVoisins(2,2)));
 
 

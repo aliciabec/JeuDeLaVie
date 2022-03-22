@@ -35,7 +35,7 @@ public class Pandemie {
         return somme;
     }
 
-    public int proba_contamine() {
+    public int proba_contamine() { // attribue la proba d'être contaminé
         int i = new Random().nextInt(100);
         if (i <= 25) {
             return 1;
@@ -44,7 +44,7 @@ public class Pandemie {
         }
     }
 
-    public int proba_vaccination(double taux) {
+    public int proba_vaccination(double taux) { // répartie le nombre de vaccinée dans le tableaux
         int i = new Random().nextInt(100);
         if (i <= taux) {
             return 1;
@@ -59,7 +59,7 @@ public class Pandemie {
                 resultat=proba_contamine();
 
         }
-        if(valeur_case_vaccin)
+        if(valeur_case_vaccin) // pas fini
 
 
         return resultat;

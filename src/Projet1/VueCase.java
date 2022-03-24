@@ -19,12 +19,10 @@ public class VueCase extends JPanel {
         for (int i = 0; i < j.getTableau().length; i++) { // pointeur null probleme
             for (int k = 0; k < j.getTableau()[0].length; k++) {
                 if(j.getTableau()[i][k]==1){
-                    //System.out.println(i + "  " + k);
                     g.setColor(Color.pink);
                     g.fillRect(i*20,k*20,20,20);
                 }
             }
-
         }
 
     }

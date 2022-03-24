@@ -15,10 +15,8 @@ public class Vue {
         frame.setSize(ligne*20, colonne*20);
         VueCase cases = new VueCase(j);
         frame.add(cases);
-        //cases.update(cases.getGraphics());
-        //frame.pack();
+
         frame.setVisible(true);
 
-        //j.run(50, 5000);
     }
 }

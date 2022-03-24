@@ -6,7 +6,6 @@ import java.awt.*;
 public class VueCase extends JPanel {
     JeuDeLaVie j;
 
-
     public VueCase(JeuDeLaVie j){
         this.j = j;
     }

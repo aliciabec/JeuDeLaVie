@@ -6,7 +6,6 @@ public class JeuDeLaVie {
 
     private int[][] tableau;
     Vue v = new Vue(this);
-    private int round, fps;
 
     public JeuDeLaVie(int k, int l) {
         this.tableau = new int[k][l];

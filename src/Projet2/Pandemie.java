@@ -1,12 +1,26 @@
 package Projet2;
 
+import Projet1.Vue;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Pandemie {
     ArrayList<ArrayList<Individu>> tab_ind;
+    int nb_contamine;
+    int taux_vaccine;
+    int taille_pop;
+    int ligne;
+    VueG v;
 
-    public Pandemie(){ this.tab_ind = new ArrayList<ArrayList<Individu>>(); }
+    public Pandemie(int nb_contamine, int taux_vaccine, int taille_pop, int ligne){
+        this.tab_ind = new ArrayList<ArrayList<Individu>>();
+        this.nb_contamine = nb_contamine;
+        this.taux_vaccine = taux_vaccine;
+        this.taille_pop = taille_pop;
+        this.ligne = ligne;
+        this.v = new VueG(this);
+    }
 
     public ArrayList<ArrayList<Individu>> getTab_Ind(){
         return this.tab_ind;
@@ -20,18 +34,33 @@ public class Pandemie {
         return this.tab_ind;
     }
 
+    public int getNb_contamine() {
+        return nb_contamine;
+    }
 
-    public int proba_contamine(int vaccine, int voisin_vacc) { // attribue la proba d'être contaminé
+    public int getTaux_vaccine() {
+        return taux_vaccine;
+    }
+
+    public int getTaille_pop() {
+        return taille_pop;
+    }
+
+    public int getLigne() {
+        return ligne;
+    }
+
+    public int proba_contamine(int vaccine, int voisin_vacc, int voisin_contamine) { // attribue la proba d'être contaminé
         /** attribue aléatoirement la contamination à partir d'une probabilité d'1/4
          * (Un voisin à une chance sur 4 d'être contaminé*/
         int rand = new Random().nextInt(100);
         if (vaccine == 1){ // si vacciné la proba est divisé par 2
-            rand/=2;
+            rand*=2;
         }
         if (voisin_vacc == 1){ // si le voisin contaminé est vacciné la proba est divisé par 2
-            rand/=2;
+            rand*=2;
         }
-        if (rand <= 25) { //inférieur à 25% on est contaminé donc 1
+        if (rand <= 25 && voisin_contamine == 1) { //inférieur à 25% on est contaminé donc 1
             return 1;
         } else {
             return 0;
@@ -49,6 +78,7 @@ public class Pandemie {
             return 0;
         }
     }
+
     public int resultats(int i, int j, Individu ind){
         /** Pas fini mais c'est une méthode qui va permettre d'afficher dans le tableau
          * les futurs contaminé, et non contaminés en fonction de proba d'être contaminé
@@ -59,22 +89,28 @@ public class Pandemie {
                 for (int l = j-1; l <j+2 ; l++) {
                     if( resultat == 0){
                         if (k != i || l != j) {
-                            int ligne = k;
+                            int lig = k;
                             int col = l;
-                            if (k == -1) {
-                                ligne = this.tab_ind.size();
+                            if (k <= -1) {
+                                lig = this.tab_ind.size()-1;
+                               // System.out.println("k <= -1, ligne = " + ligne);
                             }
-                            if (l == -1) {
-                                col = this.tab_ind.get(k).size();
+                            if (l <= -1) {
+                                col = this.tab_ind.get(i).size()-1;
+                                //System.out.println("l <= -1, col = " + col);
                             }
-                            if (k == this.tab_ind.size() + 1) {
-                                ligne = 0;
+                            if (k >= this.tab_ind.size()) {
+                                lig = 0;
+                                //System.out.println("k >= this.tab_ind.size() + 1, ligne = " + ligne);
                             }
-                            if (l == this.tab_ind.get(k).size() + 1) {
+                            if (l >= this.tab_ind.get(i).size()) {
                                 col = 0;
+                                //System.out.println("l >= this.tab_ind.get(i).size() + 1, col = " + col);
                             }
+                            //System.out.println("ligne: " + ligne + "col: " + col);
                             resultat = proba_contamine(ind.getVaccinne(),
-                                    this.tab_ind.get(ligne).get(col).getVaccinne());
+                                    this.tab_ind.get(lig).get(col).getVaccinne(),
+                                    this.tab_ind.get(lig).get(col).getContamine());
                         }
                     } else {
                         return resultat;
@@ -86,23 +122,79 @@ public class Pandemie {
     }
 
 
-    public void creationPop(int nb_contamine){
+    public void creationPop(){
+        int i1 = ligne;
+        while (i1 != 0) {
+            ArrayList<Individu> ind = new ArrayList<>();
+            for (int i = 0; i < taille_pop/ligne + 1; i++) {
+                int rand = new Random().nextInt(taille_pop);
+                if (rand < nb_contamine) {
+                    ind.add(new Individu(1, proba_vaccination(taux_vaccine)));
+                }else {
+                    ind.add(new Individu(0, proba_vaccination(taux_vaccine)));
+                }
+            }
+            i1--;
+            this.tab_ind.add(ind);
+        }
 
+    }
+
+
+    public void afficheTableau() {
+        for (ArrayList<Individu> t : this.tab_ind) {
+            String s = "[";
+            for (Individu ind : t) {
+                s += ind.getContamine();
+            }
+            s += "]";
+            System.out.println(s);
+        }
     }
 
     public void tour() {
-        int contamine = 30;
+        //System.out.println("avant la boucle");
+        //afficheTableau();
+        ArrayList<ArrayList<Individu>> t = this.tab_ind;
+        for (int i = 0; i < this.tab_ind.size(); i++) {
+            String s = "";
+            for (int j = 0; j < this.tab_ind.get(i).size(); j++) {
+                t.get(i).get(j).setContamine(resultats(i, j, this.tab_ind.get(i).get(j)));
+                s+= t.get(i).get(j).getContamine();
+                //System.out.println(t.get(i).get(j).getContamine());
+            }
+            System.out.println(s);
+        }
+
+        this.tab_ind = t;
+        //System.out.println("apres la boucle");
+        //afficheTableau();
 
     }
-      //  int[][] t = new int[this.tableau.length][this.tableau[0].length];
-       // for (int i = 0; i < this.tableau.length; i++) {
-        //    for (int j = 0; j < this.tableau[0].length; j++) {
-         //       t[i][j] = resultats(valeurCase(i,j), totalVoisins(i, j));
-        //    }
 
-       // }
-      //  this.tableau = t;
-    //}
+    public void run (int nombre_tours, double delai ) {
+        /** Méthode principale du jeu.
+         * Elle fait tourner le jeu pendant nombre_tours. Elle rafraîchit l'affichage à chaque tour
+         * et attend delai (en secondes) entre chaque tour.
+         * @nombre_tours fait tourner le programme pendant pendant ce nombre de tour
+         * @delai rafraichi la page au delai
+         */
+        long nanoSecond = System.nanoTime();
+        int i = 0;
+        while(true) {
+            if (i != nombre_tours){
+                if (System.nanoTime() - nanoSecond > delai) {
+                    nanoSecond += delai;
+                    tour();
+                    i++;
+                } else {
+                    v.frame.repaint();
+                }
+            }else {
+                break;
+            }
 
+        }
+    }
 
 }

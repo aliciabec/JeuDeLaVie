@@ -1,16 +1,27 @@
 package Projet2;
 
+import Projet1.JeuDeLaVie;
+
 import java.util.Scanner;
 
 public class Main2 {
     public static void main(String[] args){
-        System.out.println("Entrez la taille de la population \n");
+        int ligne = 30;
+        int colonne = 30;
+        Pandemie p = new Pandemie(3,80,900, 30);
+        p.creationPop();
+        System.out.println("premiere tableau cree");
+        p.afficheTableau();
+        System.out.println("premiere tableau cree");
+
+        p.run(100, 500000000.);
+        /*System.out.println("Entrez la taille de la population \n");
         Scanner sc= new Scanner(System.in);
         int pop= sc.nextInt();
 
         System.out.println("Entrez le taux de vacciné dans la population sous la forme : **.*\n");
         Scanner sc1= new Scanner(System.in);
-        double taux_vacc= sc1.nextDouble();
+        double taux_vacc= sc1.nextDouble();*/
     }
 }
 

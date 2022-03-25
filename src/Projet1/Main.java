@@ -8,7 +8,7 @@ public class Main {
         int colonne = 30;
         JeuDeLaVie j = new JeuDeLaVie(ligne,colonne);
         j.creationTableau(200);
-        j.run(100, 200000000);
+        j.run(100000000, 200000000);
 
     }
 }

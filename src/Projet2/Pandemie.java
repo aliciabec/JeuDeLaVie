@@ -8,15 +8,15 @@ import java.util.Random;
 public class Pandemie {
     ArrayList<ArrayList<Individu>> tab_ind;
     int nb_contamine;
-    int taux_vaccine;
+    int nb_vaccine;
     int taille_pop;
     int ligne;
     VueG v;
 
-    public Pandemie(int nb_contamine, int taux_vaccine, int taille_pop, int ligne){
+    public Pandemie(int nb_contamine, int nb_vaccine, int taille_pop, int ligne){
         this.tab_ind = new ArrayList<ArrayList<Individu>>();
         this.nb_contamine = nb_contamine;
-        this.taux_vaccine = taux_vaccine;
+        this.nb_vaccine = nb_vaccine;
         this.taille_pop = taille_pop;
         this.ligne = ligne;
         this.v = new VueG(this);
@@ -38,8 +38,8 @@ public class Pandemie {
         return nb_contamine;
     }
 
-    public int getTaux_vaccine() {
-        return taux_vaccine;
+    public int getNb_vaccine() {
+        return nb_vaccine;
     }
 
     public int getTaille_pop() {
@@ -93,7 +93,7 @@ public class Pandemie {
                             int col = l;
                             if (k <= -1) {
                                 lig = this.tab_ind.size()-1;
-                               // System.out.println("k <= -1, ligne = " + ligne);
+                                // System.out.println("k <= -1, ligne = " + ligne);
                             }
                             if (l <= -1) {
                                 col = this.tab_ind.get(i).size()-1;
@@ -129,9 +129,9 @@ public class Pandemie {
             for (int i = 0; i < taille_pop/ligne + 1; i++) {
                 int rand = new Random().nextInt(taille_pop);
                 if (rand < nb_contamine) {
-                    ind.add(new Individu(1, proba_vaccination(taux_vaccine)));
+                    ind.add(new Individu(1, proba_vaccination(nb_vaccine)));
                 }else {
-                    ind.add(new Individu(0, proba_vaccination(taux_vaccine)));
+                    ind.add(new Individu(0, proba_vaccination(nb_vaccine)));
                 }
             }
             i1--;
@@ -195,6 +195,19 @@ public class Pandemie {
             }
 
         }
+    }
+
+    public String afficheTotal() {
+        /** Affiche la pop totale, le nombre de vaccinés, contaminés, vaccinés étant contaminés,
+         * non vaccinés étant contaminés
+         */
+        String affiche_pop = "Population : " + taille_pop + "\n";
+        String affiche_vacc = "Vaccinés : " + nb_vaccine +"(" + nb_vaccine/taille_pop + "%)" + "\n";
+        String affiche_conta = "Contaminés : " + nb_contamine + "\n" ;
+        String affiche_contavacc = "Vaccinés contaminés : " + "\n";
+        String affiche_contanonvacc = "Non vaccinés contaminés :" + "\n";
+
+        return affiche_pop + affiche_vacc + affiche_conta + affiche_contavacc + affiche_contanonvacc;
     }
 
 }

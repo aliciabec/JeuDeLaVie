@@ -11,6 +11,11 @@ public class Individu {
 
     }
 
+    public Individu(int contamine, int vaccinne){
+        this.contamine = contamine;
+        this.vaccinne = vaccinne;
+    }
+
     public int getContamine(){
         return this.contamine;
     }

@@ -22,8 +22,8 @@ public class VueCase extends JPanel {
                     g.fillRect(i*20,k*20,20,20);
                 }
             }
-        }
 
+        }
     }
 
     public void update(Graphics g) {

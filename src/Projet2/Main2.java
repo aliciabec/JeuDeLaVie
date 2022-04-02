@@ -8,7 +8,7 @@ public class Main2 {
     public static void main(String[] args){
         int ligne = 30;
         int colonne = 30;
-        Pandemie p = new Pandemie(3,80,900, 30);
+        Pandemie p = new Pandemie(3,40,450, 15);
         p.creationPop();
         System.out.println("premiere tableau cree");
         p.afficheTableau();

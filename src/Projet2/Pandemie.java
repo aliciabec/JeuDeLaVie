@@ -163,10 +163,14 @@ public class Pandemie {
                 t.get(i).get(j).setContamine(resultats(i, j, this.tab_ind.get(i).get(j)));
                 s+= t.get(i).get(j).getContamine();
                 //System.out.println(t.get(i).get(j).getContamine());
+
             }
             System.out.println(s);
+
+
         }
 
+        afficheTotal();
         this.tab_ind = t;
         //System.out.println("apres la boucle");
         //afficheTableau();
@@ -203,17 +207,9 @@ public class Pandemie {
         /** Affiche la pop totale, le nombre de vaccinés, contaminés, vaccinés étant contaminés,
          * non vaccinés étant contaminés
          */
-
-        //ça fonctionne pas
-        //je ne sais pas si c'est la boucle ou autre
-        //mais je n'arrive pas à sortir le nb de contaminé
-        //comme si la boucle ne parcourt rien du tout
-        //soit c'est la boucle
-        //soit dans les conditions
+        //Initialise les variables
         int vacc= 0;
         int conta= 0;
-
-        //Initialise les variables
         int somme_vacc_conta = 0 ;
         int somme_nonvacc_conta  = 0 ;
 
@@ -233,6 +229,7 @@ public class Pandemie {
                         //Alors on incrémente la somme de vacciné contaminé
                         somme_vacc_conta += 1;
                         vacc += 1 ;
+
                     } else {
 
                         //Sinon on incrémente la somme de non vacciné
@@ -251,9 +248,10 @@ public class Pandemie {
             }
         }
 
-
+        //System.out.println(vacc);
         String affiche_pop = "Population : " + this.taille_pop + "\n";
         String affiche_vacc = "Vaccinés : " + vacc +" (" + Math.round(((double)vacc/this.taille_pop)*100) + "%)" + "\n";
+        //System.out.println(affiche_vacc);
         String affiche_conta = "Contaminés : " + conta +" (" + Math.round(((double)conta/this.taille_pop)*100) + "%)" + "\n";
         String affiche_contavacc = "Vaccinés contaminés : " + somme_vacc_conta + " (" + Math.round(((double)somme_vacc_conta/this.taille_pop)*100) + "%)" + "\n";
         String affiche_contanonvacc = "Non vaccinés contaminés :" + somme_nonvacc_conta + " (" + Math.round(((double)somme_nonvacc_conta/this.taille_pop)*100) + "%)" + "\n";

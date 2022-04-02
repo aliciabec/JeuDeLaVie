@@ -15,6 +15,7 @@ public class Main2 {
         System.out.println("premiere tableau cree");
 
         p.run(100, 500000000.);
+        System.out.println(p.afficheTotal());
         /*System.out.println("Entrez la taille de la population \n");
         Scanner sc= new Scanner(System.in);
         int pop= sc.nextInt();

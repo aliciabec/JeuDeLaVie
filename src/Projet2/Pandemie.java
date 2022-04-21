@@ -2,25 +2,26 @@ package Projet2;
 
 import Projet1.Vue;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Random;
+import javax.swing.Timer;
+import java.util.TimerTask;
 
 public class Pandemie {
-    public ArrayList<ArrayList<Individu>> tab_ind;
+    ArrayList<ArrayList<Individu>> tab_ind;
     int nb_contamine;
-    int nb_vaccine;
+    int taux_vaccine;
     int taille_pop;
     int ligne;
-    VueG v;
 
-    public Pandemie(int nb_contamine, int nb_vaccine, int taille_pop, int ligne){
+    public Pandemie(int nb_contamine, int taux_vaccine, int taille_pop, int ligne){
         this.tab_ind = new ArrayList<ArrayList<Individu>>();
         this.nb_contamine = nb_contamine;
-        this.nb_vaccine = nb_vaccine;
+        this.taux_vaccine = taux_vaccine;
         this.taille_pop = taille_pop;
         this.ligne = ligne;
-        this.v = new VueG(this);
     }
 
     public ArrayList<ArrayList<Individu>> getTab_Ind(){
@@ -39,8 +40,8 @@ public class Pandemie {
         return nb_contamine;
     }
 
-    public int getNb_vaccine() {
-        return nb_vaccine;
+    public int getTaux_vaccine() {
+        return taux_vaccine;
     }
 
     public int getTaille_pop() {
@@ -81,7 +82,7 @@ public class Pandemie {
     }
 
     public int resultats(int i, int j, Individu ind){
-        /**  méthode qui va permettre d'afficher dans le tableau
+        /** Pas fini mais c'est une méthode qui va permettre d'afficher dans le tableau
          * les futurs contaminé, et non contaminés en fonction de proba d'être contaminé
          * si on est vacciné ou pas */
         int resultat = ind.getContamine();
@@ -94,21 +95,16 @@ public class Pandemie {
                             int col = l;
                             if (k <= -1) {
                                 lig = this.tab_ind.size()-1;
-                                // System.out.println("k <= -1, ligne = " + ligne);
                             }
                             if (l <= -1) {
                                 col = this.tab_ind.get(i).size()-1;
-                                //System.out.println("l <= -1, col = " + col);
                             }
                             if (k >= this.tab_ind.size()) {
                                 lig = 0;
-                                //System.out.println("k >= this.tab_ind.size() + 1, ligne = " + ligne);
                             }
                             if (l >= this.tab_ind.get(i).size()) {
                                 col = 0;
-                                //System.out.println("l >= this.tab_ind.get(i).size() + 1, col = " + col);
                             }
-                            //System.out.println("ligne: " + ligne + "col: " + col);
                             resultat = proba_contamine(ind.getVaccinne(),
                                     this.tab_ind.get(lig).get(col).getVaccinne(),
                                     this.tab_ind.get(lig).get(col).getContamine());
@@ -124,18 +120,25 @@ public class Pandemie {
 
 
     public void creationPop(){
+        /** Cree la population initale a partir du pourcentage du taux de vaccine du nombre de contaminé
+         * et de la taille de la population
+         */
         int i1 = ligne;
+        // on va boucler sur le nombre de ligne
         while (i1 != 0) {
-            ArrayList<Individu> ind = new ArrayList<>();
-            for (int i = 0; i < taille_pop/ligne + 1; i++) {
+            ArrayList<Individu> ind = new ArrayList<>(); // pour chaque ligne on va cree un nouvelle Array
+            for (int i = 0; i < taille_pop/ligne; i++) {
+                // on cree un random sur la taille de la population
                 int rand = new Random().nextInt(taille_pop);
+                // test pour n'avoir que nombre de contamné de depart
                 if (rand < nb_contamine) {
-                    ind.add(new Individu(1, proba_vaccination(nb_vaccine)));
+                    ind.add(new Individu(1, proba_vaccination(taux_vaccine)));
                 }else {
-                    ind.add(new Individu(0, proba_vaccination(nb_vaccine)));
+                    ind.add(new Individu(0, proba_vaccination(taux_vaccine)));
                 }
             }
             i1--;
+            // on rajoute l'Array dans notre double array de depart
             this.tab_ind.add(ind);
         }
 
@@ -153,57 +156,8 @@ public class Pandemie {
         }
     }
 
-    public void tour() {
-        //System.out.println("avant la boucle");
-        //afficheTableau();
-        ArrayList<ArrayList<Individu>> t = this.tab_ind;
-        for (int i = 0; i < this.tab_ind.size(); i++) {
-            String s = "";
-            for (int j = 0; j < this.tab_ind.get(i).size(); j++) {
-                t.get(i).get(j).setContamine(resultats(i, j, this.tab_ind.get(i).get(j)));
-                s+= t.get(i).get(j).getContamine();
-                //System.out.println(t.get(i).get(j).getContamine());
 
-            }
-            System.out.println(s);
-
-
-        }
-
-        afficheTotal();
-        this.tab_ind = t;
-        //System.out.println("apres la boucle");
-        //afficheTableau();
-
-    }
-
-    public void run (int nombre_tours, double delai ) {
-        /** Méthode principale du jeu.
-         * Elle fait tourner le jeu pendant nombre_tours. Elle rafraîchit l'affichage à chaque tour
-         * et attend delai (en secondes) entre chaque tour.
-         * @nombre_tours fait tourner le programme pendant ce nombre de tour
-         * @delai rafraichi la page au delai
-         */
-        long nanoSecond = System.nanoTime();
-        int i = 0;
-        while(true) {
-            if (i != nombre_tours){
-                if (System.nanoTime() - nanoSecond > delai) {
-                    nanoSecond += delai;
-                    tour();
-                    i++;
-                } else {
-                    v.frame.repaint();
-
-                }
-            }else {
-                break;
-            }
-
-        }
-    }
-
-    public String afficheTotal() {
+    public String[] afficheTotal() {
         /** Affiche la pop totale, le nombre de vaccinés, contaminés, vaccinés étant contaminés,
          * non vaccinés étant contaminés
          */
@@ -226,7 +180,7 @@ public class Pandemie {
                 //Check si l'individu est contaminé
                 if ( this.tab_ind.get(i).get(j).getContamine() == 1 ) {
                     conta += 1 ;
-                    System.out.println(conta);
+                    //System.out.println(conta);
 
                     //Si l'individu contaminé est vacciné
                     if ( this.tab_ind.get(i).get(j).getVaccinne() == 1) {
@@ -234,7 +188,7 @@ public class Pandemie {
                         //Alors on incrémente la somme de vacciné contaminé
                         somme_vacc_conta += 1;
                         vacc += 1 ;
-                        System.out.println(vacc);
+                        //System.out.println(vacc);
 
                     } else {
 
@@ -243,7 +197,7 @@ public class Pandemie {
 
                     }
 
-                //Sinon individu sain
+                    //Sinon individu sain
                 } else {
 
                     //Si l'individu est vacciné
@@ -254,15 +208,62 @@ public class Pandemie {
             }
         }
 
-        //System.out.println(vacc);
         String affiche_pop = "Population : " + pop + "\n";
         String affiche_vacc = "Vaccinés : " + vacc +" (" + Math.round(((double)vacc/pop)*100) + "%)" + "\n";
-        //System.out.println(affiche_vacc);
         String affiche_conta = "Contaminés : " + conta +" (" + Math.round(((double)conta/pop)*100) + "%)" + "\n";
         String affiche_contavacc = "Vaccinés contaminés : " + somme_vacc_conta + " (" + Math.round(((double)somme_vacc_conta/pop)*100) + "%)" + "\n";
         String affiche_contanonvacc = "Non vaccinés contaminés :" + somme_nonvacc_conta + " (" + Math.round(((double)somme_nonvacc_conta/pop)*100) + "%)" + "\n";
 
-        return affiche_pop + affiche_vacc + affiche_conta + affiche_contavacc + affiche_contanonvacc;
+        // on cree un tableau pour qu'a l'affichage on puisse afficher pour chaque ligne
+        String[] res = new String[5];
+        res[0] = affiche_pop;
+        res[1] = affiche_vacc;
+        res[2] = affiche_conta;
+        res[3] = affiche_contavacc;
+        res[4] = affiche_contanonvacc;
+
+        return res;
     }
 
+
+    public void tour() {
+        ArrayList<ArrayList<Individu>> t = this.tab_ind;
+        for (int i = 0; i < this.tab_ind.size(); i++) {
+            for (int j = 0; j < this.tab_ind.get(i).size(); j++) {
+                t.get(i).get(j).setContamine(resultats(i, j, this.tab_ind.get(i).get(j)));
+            }
+        }
+        this.tab_ind = t;
+        //afficheTableau();
+    }
+
+
+    public void run (int nombre_tours, double delai) {
+        /** Méthode principale du jeu.
+         * Elle fait tourner le jeu pendant nombre_tours. Elle rafraîchit l'affichage à chaque tour
+         * et attend delai (en secondes) entre chaque tour.
+         * @nombre_tours fait tourner le programme pendant pendant ce nombre de tour
+         * @delai rafraichi la page au delai
+         */
+        creationPop();
+        VueG v = new VueG(this);
+        v.repaint();
+
+        long tempsDebut = System.nanoTime();
+        int i = 0;
+        System.out.println((delai));
+        while(i != nombre_tours){
+            if (System.nanoTime() - tempsDebut > delai) {
+                tempsDebut += delai;
+                tour();
+                i++;
+            } else {
+                v.repaint();
+            }
+        }
+
+
+    }
 }
+
+
